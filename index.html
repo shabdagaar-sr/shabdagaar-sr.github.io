@@ -140,6 +140,7 @@ font-size:32px;
 हर शब्द एक सवाल। <br>
 अँधेरों से उजाले का।
 </div>
+  <div id="politics-posts"></div>
 </section>
 
 <section id="heroes">
@@ -150,6 +151,7 @@ font-size:32px;
 जिन्होंने देश बचाया, धर्म बचाया और इंसानियत बचाई। <br><br>
 आज वो या उनके वंशज कहाँ हैं?
 </div>
+  <div id="heroes-posts"></div>
 </section>
 
 <section id="questions">
@@ -161,6 +163,7 @@ font-size:32px;
 आँसू नहीं — आँखों के शोलों में होगा सवाल। <br>
 झूठ से सच का।
 </div>
+  <div id="questions-posts"></div>
 </section>
 
 <section id="stories">
@@ -175,6 +178,7 @@ font-size:32px;
 हमारी कहानी। <br>
 जो चलेगी — बिना थके, बिना झुके।
 </div>
+  <div id="stories-posts"></div>
 </section>
 
 <section id="shayari">
@@ -182,7 +186,8 @@ font-size:32px;
 <div class="card">
 यहाँ शायरी सिर्फ अल्फ़ाज़ नहीं होगी —  
 एक एहसास होगी।
-</div>
+</div> 
+ <div id="shayari-posts"></div> 
 </section>
 
 <section id="ghazal">
@@ -190,14 +195,16 @@ font-size:32px;
 <div class="card">
 हर मतले में शुरुआत।  
 हर मक़ते में पहचान।
-</div>
+</div> 
+  <div id="ghazal-posts"></div>
 </section>
 
 <section id="nazm">
 <div class="section-title">Nazm</div>
 <div class="card">
 जो दिल से निकले और आत्मा तक पहुँचे।
-</div>
+</div> 
+  <div id="nazm-posts"></div>
 </section>
 
 <section id="shortstories">
@@ -206,6 +213,7 @@ font-size:32px;
 छोटे शब्द।  
 बड़ी सच्चाई।
 </div>
+  <div id="shortstories-posts"></div>
 </section>
 
 <section id="about">
@@ -217,11 +225,47 @@ Shabdagaar Sr — एक ऐसा मंच जहाँ लिखना सि
 सवाल से सच तक,  
 शायरी से सुकून तक।
 </div>
+  <div id="about-posts"></div>
 </section>
 
 <footer>
 © 2026 Shabdagaar Sr | आवाज़ जो झुके नहीं
 </footer>
 
+<script>
+function loadPosts(label, containerId){
+fetch(`https://shabdagaar-sr.blogspot.com/feeds/posts/default/-/${label}?alt=json`)
+.then(res=>res.json())
+.then(data=>{
+let posts=data.feed.entry;
+let container=document.getElementById(containerId);
+if(!posts){return;}
+posts.slice(0,5).forEach(post=>{
+let title=post.title.$t;
+let link=post.link.find(l=>l.rel==="alternate").href;
+container.innerHTML+=`
+<div class="card">
+<h3>
+<a href="${link}" target="_blank" style="color:#c5a94a;text-decoration:none;">
+${title}
+</a>
+</h3>
+</div>`;
+});
+});
+}
+
+loadPosts("Shayari","shayari-posts");
+loadPosts("Ghazal","ghazal-posts");
+loadPosts("Nazm","nazm-posts");
+loadPosts("ShortStories","shortstories-posts");
+  loadPosts("Stories","stories-posts");
+loadPosts("Rajneeti","politics-posts");
+loadPosts("Heroes","heroes-posts");
+loadPosts("Sawaal","questions-posts");
+loadPosts("About","about-posts");
+</script>
+  
+  
 </body>
 </html>
