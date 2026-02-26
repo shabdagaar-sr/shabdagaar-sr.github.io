@@ -235,38 +235,43 @@ Shabdagaar Sr — एक ऐसा मंच जहाँ लिखना सि
 
 <script>
 function loadPosts(label, containerId){
-fetch(`https://shabdagaar-sr.blogspot.com/feeds/posts/default/-/${label}?alt=json`)
-.then(res=>res.json())
-.then(data=>{
-let posts=data.feed.entry;
-let container=document.getElementById(containerId);
-if(!posts){return;}
-posts.slice(0,5).forEach(post=>{
-let title=post.title.$t;
-let link=post.link.find(l=>l.rel==="alternate").href;
-container.innerHTML+=`
-<div class="card">
-<h3>
-<a href="${link}" target="_blank" style="color:#c5a94a;text-decoration:none;">
-${title}
-</a>
-</h3>
-</div>`;
-});
-});
+  let url = `https://shabdagaar-sr.blogspot.com/feeds/posts/default/-/${label}?alt=json-in-script&callback=handleData`;
+
+  window.handleData = function(data){
+    let posts = data.feed.entry;
+    let container = document.getElementById(containerId);
+    if(!posts){ return; }
+
+    posts.slice(0,5).forEach(post=>{
+      let title = post.title.$t;
+      let link = post.link.find(l=>l.rel==="alternate").href;
+
+      container.innerHTML += `
+        <div class="card">
+          <h3>
+            <a href="${link}" target="_blank" style="color:#c5a94a;text-decoration:none;">
+              ${title}
+            </a>
+          </h3>
+        </div>
+      `;
+    });
+  };
+
+  let script = document.createElement("script");
+  script.src = url;
+  document.body.appendChild(script);
 }
 
 loadPosts("Shayari","shayari-posts");
 loadPosts("Ghazal","ghazal-posts");
 loadPosts("Nazm","nazm-posts");
 loadPosts("ShortStories","shortstories-posts");
-  loadPosts("Stories","stories-posts");
+loadPosts("Stories","stories-posts");
 loadPosts("Rajneeti","politics-posts");
 loadPosts("Heroes","heroes-posts");
 loadPosts("Sawaal","questions-posts");
-loadPosts("About","about-posts");
 </script>
-  
   
 </body>
 </html>
