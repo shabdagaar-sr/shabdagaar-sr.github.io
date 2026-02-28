@@ -234,45 +234,58 @@ Shabdagaar Sr — एक ऐसा मंच जहाँ लिखना सि
 </footer>
 <script>
 function loadPosts(label, containerId){
+
 let url = `https://shabdagaar-sr.blogspot.com/feeds/posts/default/-/${label}?alt=json`;
 
 fetch(url)
-.then(res => res.json())
+.then(response => response.json())
 .then(data => {
 
-let posts = data.feed.entry;
 let container = document.getElementById(containerId);
+container.innerHTML = "";
 
-if(!posts) return;
+if(!data.feed.entry){
+container.innerHTML = "<p>No posts available.</p>";
+return;
+}
 
-posts.slice(0,5).forEach(post => {
+data.feed.entry.slice(0,5).forEach(post => {
 
 let title = post.title.$t;
 let link = post.link.find(l => l.rel === "alternate").href;
 
-container.innerHTML += `
-<div class="card">
+let div = document.createElement("div");
+div.className = "card";
+
+div.innerHTML = `
 <h3>
 <a href="${link}" target="_blank" style="color:#c5a94a;text-decoration:none;">
 ${title}
 </a>
 </h3>
-</div>
 `;
 
+container.appendChild(div);
+
 });
+
+})
+.catch(error => {
+document.getElementById(containerId).innerHTML = "Posts load nahi ho pa rahe.";
 });
 }
 
 loadPosts("Shayari", "shayari-posts");
 loadPosts("Ghazal", "ghazal-posts");
 loadPosts("Nazm", "nazm-posts");
-loadPosts("ShortStories", "shortstories-posts");
+loadPosts("Short Stories", "shortstories-posts");
 loadPosts("Stories", "stories-posts");
 loadPosts("Rajneeti", "politics-posts");
 loadPosts("Heroes", "heroes-posts");
 loadPosts("Sawaal", "questions-posts");
+
 </script>
+
   
 </body>
 </html>
